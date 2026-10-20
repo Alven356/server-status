@@ -1,1 +1,122 @@
-m«ëˆ§½©buªàºg§¶v­Š÷¿Iêïz´­jÛ¬ýXžÂÏÒµ«n°ú)º•¢Ú0k¦•KæÚ±î¸„7[žé¢Šwâ•ê(º×â•èazZ]ŠÊek+aŠÉž²Æ x7]yÊy×œ¡×¬Šznµ¶ëy©­æ¤zw(uçl¶¸§‚)í¢{¦r«iË^®X§zÈ¢ž›­Šznµø¥y×Ÿjém~ŠìµØ§¢‹­¦ëhºÚnµø¥y×Ÿjém~ŠìµÚ.
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ServerStatus.Views.StatusPopupWindow"
+        Title="server-status"
+        Width="420" Height="488"
+        MinWidth="420" MaxWidth="420"
+        MinHeight="488" MaxHeight="488"
+        CanResize="False"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Topmost="True"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent"
+        WindowStartupLocation="Manual">
+  <Window.Styles>
+    <Style Selector="TextBlock.muted"><Setter Property="Foreground" Value="#6B7A90" /></Style>
+    <Style Selector="TextBlock.mono"><Setter Property="FontFamily" Value="SF Mono, Cascadia Mono, Consolas" /></Style>
+    <Style Selector="TextBlock.kicker"><Setter Property="Foreground" Value="#708196" /><Setter Property="FontSize" Value="10" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+    <Style Selector="Button.link">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#34475E" />
+      <Setter Property="Padding" Value="9,5" />
+      <Setter Property="MinHeight" Value="30" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.primary">
+      <Setter Property="Background" Value="#176B87" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="BorderBrush" Value="#125B73" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="9" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+  </Window.Styles>
+
+  <Border Margin="8" Background="#FFFFFF" BorderBrush="#C9D4DF" BorderThickness="1" CornerRadius="18" ClipToBounds="True">
+    <Grid RowDefinitions="70,*,52">
+      <Border Grid.Row="0" Background="#142B3D" Padding="20,0">
+        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" VerticalAlignment="Center">
+          <Border Grid.Column="0" Width="36" Height="36" BorderBrush="#7F9AAD" BorderThickness="1" CornerRadius="9" Background="#1D3A4F">
+            <Grid>
+              <StackPanel VerticalAlignment="Center" Margin="9,0,10,0" Spacing="5">
+                <Border Height="2" Background="#FFFFFF" CornerRadius="1" />
+                <Border Height="2" Background="#FFFFFF" CornerRadius="1" />
+              </StackPanel>
+              <Ellipse Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,5,5" Fill="{Binding StateBrush}" Stroke="#142B3D" StrokeThickness="2" />
+            </Grid>
+          </Border>
+          <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+            <TextBlock Text="SERVER STATUS" Foreground="White" FontWeight="SemiBold" FontSize="14" />
+            <TextBlock Text="Minecraft æœåŠ¡å™¨å®ˆæœ›" Foreground="#AFC1CE" FontSize="10" />
+          </StackPanel>
+          <Border Grid.Column="2" Background="#24465D" BorderBrush="#46677D" BorderThickness="1" CornerRadius="10" Padding="8,3">
+            <TextBlock Text="v2.1.0" Foreground="#DDE8EF" FontFamily="SF Mono, Cascadia Mono, Consolas" FontSize="9" />
+          </Border>
+        </Grid>
+      </Border>
+
+      <Grid Grid.Row="1" Margin="20,15,20,14" RowDefinitions="72,44,58,58,42" RowSpacing="9">
+        <Grid Grid.Row="0" ColumnDefinitions="62,*" ColumnSpacing="14">
+          <Border Grid.Column="0" Width="60" Height="60" CornerRadius="15" Background="{Binding StateSoftBrush}" BorderBrush="{Binding StateBrush}" BorderThickness="1">
+            <Grid>
+              <Ellipse Width="27" Height="27" Fill="Transparent" Stroke="{Binding StateBrush}" StrokeThickness="3" />
+              <Ellipse Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-3,-3" Fill="{Binding StateBrush}" Stroke="White" StrokeThickness="3" />
+            </Grid>
+          </Border>
+          <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+            <TextBlock Text="å½“å‰çŠ¶æ€" Classes="kicker" />
+            <TextBlock Text="{Binding StatusLabel}" Foreground="#102437" FontSize="24" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding StatusDetail}" Classes="muted" FontSize="11" TextTrimming="CharacterEllipsis" />
+          </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="1" Background="#F5F7F9" BorderBrush="#D8E0E7" BorderThickness="1" CornerRadius="9" Padding="13,0">
+          <Grid ColumnDefinitions="78,*" VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" Text="ç›‘æŽ§æœåŠ¡å™¨" Classes="kicker" />
+            <TextBlock Grid.Column="1" Text="{Binding Address}" Classes="mono" Foreground="#172B3E" FontWeight="SemiBold" FontSize="11" HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" />
+          </Grid>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,10,*">
+          <Border Grid.Column="0" Background="#F8FAFB" BorderBrush="#D8E0E7" BorderThickness="1" CornerRadius="9" Padding="13,8">
+            <StackPanel Spacing="4"><TextBlock Text="åœ¨çº¿çŽ©å®¶" Classes="kicker" /><TextBlock Text="{Binding Players}" Classes="mono" Foreground="#102437" FontWeight="SemiBold" FontSize="17" /></StackPanel>
+          </Border>
+          <Border Grid.Column="2" Background="#F8FAFB" BorderBrush="#D8E0E7" BorderThickness="1" CornerRadius="9" Padding="13,8">
+            <StackPanel Spacing="4"><TextBlock Text="å“åº”å»¶è¿Ÿ" Classes="kicker" /><TextBlock Text="{Binding Latency}" Classes="mono" Foreground="#102437" FontWeight="SemiBold" FontSize="17" /></StackPanel>
+          </Border>
+        </Grid>
+
+        <Border Grid.Row="3" Background="#F5F7F9" BorderBrush="#D8E0E7" BorderThickness="1" CornerRadius="9" Padding="13,8">
+          <Grid ColumnDefinitions="4,*" ColumnSpacing="10">
+            <Border Grid.Column="0" Background="{Binding StateBrush}" CornerRadius="2" />
+            <StackPanel Grid.Column="1" Spacing="3">
+              <TextBlock Text="æœåŠ¡å™¨æ¶ˆæ¯" Classes="kicker" />
+              <TextBlock Text="{Binding Motd}" Foreground="#3F5267" FontSize="11" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <Button Grid.Row="4" Classes="primary" Command="{Binding RefreshCommand}" HorizontalContentAlignment="Center">
+          <TextBlock Text="{Binding RefreshText}" />
+        </Button>
+      </Grid>
+
+      <Border Grid.Row="2" Background="#F5F7F9" BorderBrush="#D8E0E7" BorderThickness="0,1,0,0" Padding="20,0">
+        <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+          <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <Ellipse Width="7" Height="7" Fill="{Binding StateBrush}" />
+            <TextBlock Text="{Binding MonitoringText}" Classes="muted" FontSize="10" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2">
+            <Button Classes="link" Command="{Binding SettingsCommand}" Content="è®¾ç½®" />
+            <Border Width="1" Height="14" Background="#D8E0E7" VerticalAlignment="Center" />
+            <Button Classes="link" Command="{Binding QuitCommand}" Content="å®‰å…¨é€€å‡º" />
+          </StackPanel>
+        </Grid>
+      </Border>
+    </Grid>
+  </Border>
+</Window>

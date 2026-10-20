@@ -1,1 +1,134 @@
-m�눧��bu��g��v����I��z��j۬�X����z�b��wh��Z�U,j�jǺ��n{��)ߊW���_�W���iv+)����+&z����u�(u�^r�^�)��ۭ�n����ܡם��������Z��-z�b��"�zn�)����^}����+��b��.�����i����^}����+��h�
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ServerStatus.Views.SettingsWindow"
+        Title="server-status 设置"
+        Icon="/Assets/app.ico"
+        Width="560" Height="740"
+        MinWidth="520" MinHeight="660"
+        MaxWidth="680" MaxHeight="900"
+        CanResize="True"
+        WindowStartupLocation="CenterScreen"
+        Background="#EEF2F5">
+  <Window.Styles>
+    <Style Selector="TextBlock.muted"><Setter Property="Foreground" Value="#6B7A90" /></Style>
+    <Style Selector="TextBlock.section"><Setter Property="Foreground" Value="#102437" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+    <Style Selector="TextBlock.kicker"><Setter Property="Foreground" Value="#708196" /><Setter Property="FontSize" Value="10" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+    <Style Selector="Border.card"><Setter Property="Background" Value="#FFFFFF" /><Setter Property="BorderBrush" Value="#D6DFE7" /><Setter Property="BorderThickness" Value="1" /><Setter Property="CornerRadius" Value="12" /></Style>
+    <Style Selector="ToggleSwitch"><Setter Property="MinWidth" Value="44" /><Setter Property="MinHeight" Value="28" /></Style>
+    <Style Selector="Button.primary"><Setter Property="Background" Value="#176B87" /><Setter Property="Foreground" Value="White" /><Setter Property="BorderBrush" Value="#125B73" /><Setter Property="BorderThickness" Value="1" /><Setter Property="FontWeight" Value="SemiBold" /></Style>
+  </Window.Styles>
+
+  <Grid RowDefinitions="88,*">
+    <Border Grid.Row="0" Background="#142B3D" Padding="30,0">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14" VerticalAlignment="Center">
+        <Border Grid.Column="0" Width="42" Height="42" BorderBrush="#7F9AAD" BorderThickness="1" CornerRadius="11" Background="#1D3A4F">
+          <Grid>
+            <StackPanel VerticalAlignment="Center" Margin="10,0,11,0" Spacing="6">
+              <Border Height="2" Background="#FFFFFF" CornerRadius="1" />
+              <Border Height="2" Background="#FFFFFF" CornerRadius="1" />
+            </StackPanel>
+            <Ellipse Width="9" Height="9" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,5,5" Fill="{Binding StateBrush}" Stroke="#142B3D" StrokeThickness="2" />
+          </Grid>
+        </Border>
+        <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+          <TextBlock Text="server-status" Foreground="White" FontSize="18" FontWeight="SemiBold" />
+          <TextBlock Text="Minecraft 服务器在线状态守望工具" Foreground="#AFC1CE" FontSize="11" />
+        </StackPanel>
+        <Border Grid.Column="2" Background="#24465D" BorderBrush="#46677D" BorderThickness="1" CornerRadius="12" Padding="10,5">
+          <TextBlock Text="VERSION 2.1.0" Foreground="#DDE8EF" FontFamily="SF Mono, Cascadia Mono, Consolas" FontSize="9" />
+        </Border>
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+      <StackPanel Margin="30,24,30,28" Spacing="16">
+        <Border Classes="card" Padding="18">
+          <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+            <Border Grid.Column="0" Width="48" Height="48" CornerRadius="12" Background="{Binding StateSoftBrush}" BorderBrush="{Binding StateBrush}" BorderThickness="1">
+              <Ellipse Width="18" Height="18" Fill="{Binding StateBrush}" />
+            </Border>
+            <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+              <TextBlock Text="实时监控状态" Classes="kicker" />
+              <TextBlock Text="{Binding StatusLabel}" Classes="section" FontSize="20" />
+              <TextBlock Text="{Binding Address}" Classes="muted" FontFamily="SF Mono, Cascadia Mono, Consolas" FontSize="10" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <Button Grid.Column="2" Command="{Binding RefreshCommand}" Background="#F3F7F9" Foreground="#176B87" BorderBrush="#C8D8E1" BorderThickness="1" Content="立即检查" VerticalAlignment="Center" />
+          </Grid>
+        </Border>
+
+        <StackPanel Spacing="4">
+          <TextBlock Text="监控配置" Classes="section" FontSize="18" />
+          <TextBlock Text="设置要守望的服务器与后台检查频率。" Classes="muted" FontSize="11" />
+        </StackPanel>
+
+        <Border Classes="card" Padding="18">
+          <StackPanel Spacing="15">
+            <StackPanel Spacing="7">
+              <TextBlock Text="服务器地址" Classes="section" FontSize="13" />
+              <TextBox x:Name="AddressInput" FontFamily="SF Mono, Cascadia Mono, Consolas" FontSize="12" Padding="12,0" Watermark="play.example.com:25565" />
+              <TextBlock Text="支持域名、IP 和自定义端口。" Classes="muted" FontSize="10" />
+            </StackPanel>
+            <Border Height="1" Background="#E2E8EE" />
+            <Grid ColumnDefinitions="*,140">
+              <StackPanel Grid.Column="0" Spacing="3" VerticalAlignment="Center">
+                <TextBlock Text="检查频率" Classes="section" FontSize="13" />
+                <TextBlock Text="较短间隔会更快发现服务器上线。" Classes="muted" FontSize="10" />
+              </StackPanel>
+              <ComboBox x:Name="IntervalSelect" Grid.Column="1" HorizontalAlignment="Stretch">
+                <ComboBoxItem Content="每 15 秒" Tag="15" />
+                <ComboBoxItem Content="每 30 秒" Tag="30" />
+                <ComboBoxItem Content="每 1 分钟" Tag="60" />
+                <ComboBoxItem Content="每 2 分钟" Tag="120" />
+                <ComboBoxItem Content="每 5 分钟" Tag="300" />
+              </ComboBox>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <StackPanel Spacing="4">
+          <TextBlock Text="提醒与启动" Classes="section" FontSize="18" />
+          <TextBlock Text="只在服务器由离线变为在线时提醒。" Classes="muted" FontSize="11" />
+        </StackPanel>
+
+        <Border Classes="card" Padding="18,4">
+          <Grid RowDefinitions="64,64,64">
+            <Border Grid.Row="0" BorderBrush="#E2E8EE" BorderThickness="0,0,0,1">
+              <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Spacing="3" VerticalAlignment="Center"><TextBlock Text="系统通知" Classes="section" FontSize="13" /><TextBlock Text="服务器恢复在线时显示桌面提醒" Classes="muted" FontSize="10" /></StackPanel>
+                <ToggleSwitch x:Name="NotificationsToggle" Grid.Column="1" VerticalAlignment="Center" />
+              </Grid>
+            </Border>
+            <Border Grid.Row="1" BorderBrush="#E2E8EE" BorderThickness="0,0,0,1">
+              <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Spacing="3" VerticalAlignment="Center"><TextBlock Text="提示音" Classes="section" FontSize="13" /><TextBlock Text="随上线通知播放简短提示音" Classes="muted" FontSize="10" /></StackPanel>
+                <ToggleSwitch x:Name="SoundToggle" Grid.Column="1" VerticalAlignment="Center" />
+              </Grid>
+            </Border>
+            <Border Grid.Row="2">
+              <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Spacing="3" VerticalAlignment="Center"><TextBlock Text="登录时启动" Classes="section" FontSize="13" /><TextBlock Text="登录电脑后在菜单栏或系统托盘开始守望" Classes="muted" FontSize="10" /></StackPanel>
+                <ToggleSwitch x:Name="LaunchToggle" Grid.Column="1" VerticalAlignment="Center" />
+              </Grid>
+            </Border>
+          </Grid>
+        </Border>
+
+        <Border Background="#EAF2F5" BorderBrush="#C9DCE5" BorderThickness="1" CornerRadius="10" Padding="14,11">
+          <StackPanel Spacing="4">
+            <TextBlock Text="本地优先 · 最少数据" Foreground="#23566B" FontWeight="SemiBold" FontSize="11" />
+            <TextBlock Text="设置保存在本机。状态查询只使用服务器地址，不读取或上传 Minecraft 账号资料。" Foreground="#517184" FontSize="10" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+
+        <TextBlock x:Name="ErrorText" Foreground="#B8443E" FontSize="11" MinHeight="15" />
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+            <TextBlock x:Name="SavedText" Text="" Foreground="#25815A" FontSize="11" />
+            <TextBlock Text="关闭窗口后，监控仍会在后台继续运行。" Classes="muted" FontSize="9" />
+          </StackPanel>
+          <Button x:Name="SaveButton" Grid.Column="1" Classes="primary" Width="132" Content="保存设置" />
+        </Grid>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Window>

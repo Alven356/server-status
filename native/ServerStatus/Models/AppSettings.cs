@@ -1,1 +1,22 @@
-m«ëˆ§½©buªàºg§¶v­Š÷¿Iêïz´­jÛ¬üÊz[?šRzÛb±KæÚ±î¸„7[é¢Šwâ•ê(º×â•èazZ]ŠÊek+aŠÉ²Æ x7]yÊy×œ¡×¬Šznµ¶ëy©­æ¤zw(uçl¶¸§‚)í¢{¦r«iË^®X§zÈ¢›­Šznµø¥y×Ÿjém~ŠìµØ§¢‹­¦ëhºÚnµø¥y×Ÿjém~ŠìµÚ.
+namespace ServerStatus.Models;
+
+public sealed record AppSettings
+{
+    public const string DefaultAddress = "";
+
+    public string ServerAddress { get; init; } = DefaultAddress;
+    public int IntervalSeconds { get; init; } = 30;
+    public bool Notifications { get; init; } = true;
+    public bool Sound { get; init; } = true;
+    public bool LaunchAtLogin { get; init; }
+
+    public AppSettings Normalize()
+    {
+        _ = ServerEndpoint.Parse(ServerAddress);
+        return this with
+        {
+            ServerAddress = ServerAddress.Trim(),
+            IntervalSeconds = Math.Clamp(IntervalSeconds, 15, 300)
+        };
+    }
+}

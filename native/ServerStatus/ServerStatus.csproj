@@ -1,1 +1,29 @@
-m«ëˆ§½©buªàºg§¶v­Š÷¿Iêïz´­jÛ¬ı'«½êÒµ«n±Ë)®ˆÔ±¨m«ëˆCu¹îš(§~)^¢‹­~)^†¥¥Ø¬¦V²¶¬™ë,jƒu×œ¡×yÊzÈ§¦ë[n·š‘ºŞjG§r‡^vËkŠx"Ú'ºg!j¶œµêåŠw¬Š)éºØ§¦ë_ŠWyö®–×è®Ë]Šz(ºÚn¶‹­¦ë_ŠWyö®–×è®Ë]¢ë
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ServerStatus</RootNamespace>
+    <AssemblyName>server-status</AssemblyName>
+    <ApplicationIcon>../../build/icon.ico</ApplicationIcon>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+    <PublishTrimmed>false</PublishTrimmed>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>2.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.22" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.22" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.22" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="../../build/icon.ico" Link="Assets/app.ico" />
+    <Content Include="../../build/icon.ico" Link="Assets/app.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="../../assets/online.wav" Link="Assets/online.wav" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets/**/*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

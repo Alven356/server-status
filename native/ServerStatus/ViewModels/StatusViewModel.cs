@@ -1,1 +1,113 @@
-m«ëˆ§½©buªàºg§¶v­Š÷¿Iêïz´­jÛ¬ıXÀÊz[?JÖ­ºÅb{(ué\±KæÚ±î¸„7[é¢Šwâ•ê(º×â•èazZ]ŠÊek+aŠÉ²Æ x7]yÊy×œ¡×¬Šznµ¶ëy©­æ¤zw(uçl¶¸§‚)í¢{¦r«iË^®X§zÈ¢›­Šznµø¥y×Ÿjém~ŠìµØ§¢‹­¦ëhºÚnµø¥y×Ÿjém~ŠìµÚ.
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Avalonia.Media;
+using ServerStatus.Models;
+
+namespace ServerStatus.ViewModels;
+
+public sealed class StatusViewModel : INotifyPropertyChanged
+{
+    private static readonly IBrush OnlineBrush = new SolidColorBrush(Color.Parse("#25815A"));
+    private static readonly IBrush OfflineBrush = new SolidColorBrush(Color.Parse("#BD4C45"));
+    private static readonly IBrush PendingBrush = new SolidColorBrush(Color.Parse("#9A7331"));
+    private static readonly IBrush OnlineSoftBrush = new SolidColorBrush(Color.Parse("#E9F4EE"));
+    private static readonly IBrush OfflineSoftBrush = new SolidColorBrush(Color.Parse("#F8ECEA"));
+    private static readonly IBrush PendingSoftBrush = new SolidColorBrush(Color.Parse("#F7F1E5"));
+
+    private ServerStatusSnapshot _snapshot = new();
+    private bool _isChecking;
+    private int _intervalSeconds = 30;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    public required AsyncRelayCommand RefreshCommand { get; init; }
+    public required RelayCommand SettingsCommand { get; init; }
+    public required AsyncRelayCommand QuitCommand { get; init; }
+
+    private bool HasConfiguredServer => !string.IsNullOrWhiteSpace(_snapshot.Address);
+
+    public string StatusLabel => !HasConfiguredServer
+        ? "éœ€è¦è®¾ç½®"
+        : _isChecking && _snapshot.State is ServerState.Waiting or ServerState.Unknown
+        ? "æ­£åœ¨æ£€æŸ¥"
+        : _snapshot.State switch
+        {
+            ServerState.Online => "æœåŠ¡å™¨åœ¨çº¿",
+            ServerState.Offline => "æœåŠ¡å™¨ç¦»çº¿",
+            ServerState.Unknown => "æ— æ³•ç¡®è®¤",
+            _ => "å‡†å¤‡æ£€æŸ¥"
+        };
+
+    public string StatusDetail => !HasConfiguredServer
+        ? "æ·»åŠ ä¸€ä¸ª Minecraft Java æœåŠ¡å™¨åœ°å€"
+        : _isChecking
+        ? "æ­£åœ¨è·å–æœ€æ–°çŠ¶æ€â€¦"
+        : _snapshot.State switch
+        {
+            ServerState.Online => "å·²æ”¶åˆ°æœåŠ¡å™¨å“åº”",
+            ServerState.Offline => _snapshot.Detail,
+            ServerState.Unknown => _snapshot.Detail,
+            _ => "ç­‰å¾…é¦–æ¬¡çŠ¶æ€æ£€æŸ¥"
+        };
+
+    public string Address => HasConfiguredServer ? _snapshot.Address : "å°šæœªé…ç½®";
+    public string Players => !HasConfiguredServer
+        ? "â€”"
+        : _snapshot.State == ServerState.Online
+        ? $"{_snapshot.PlayersOnline} / {_snapshot.PlayersMax}"
+        : _snapshot.State == ServerState.Offline ? "0" : "â€”";
+    public string Latency => _snapshot.LatencyMs is { } latency ? $"{latency} ms" : "â€”";
+    public string Motd => !HasConfiguredServer
+        ? "å®Œæˆé¦–æ¬¡è®¾ç½®åï¼Œserver-status ä¼šåœ¨åå°å¼€å§‹å®ˆæœ›ã€‚"
+        : string.IsNullOrWhiteSpace(_snapshot.Motd) ? "ç­‰å¾…æœåŠ¡å™¨å“åº”ã€‚" : _snapshot.Motd;
+    public string RefreshText => !HasConfiguredServer ? "æ·»åŠ æœåŠ¡å™¨" : _isChecking ? "æ­£åœ¨æ£€æŸ¥â€¦" : "ç«‹å³æ£€æŸ¥";
+    public string MonitoringText => !HasConfiguredServer
+        ? "ç­‰å¾…å®Œæˆé¦–æ¬¡è®¾ç½®"
+        : _intervalSeconds < 60
+        ? $"åå°ç›‘æ§ä¸­ Â· æ¯ {_intervalSeconds} ç§’"
+        : $"åå°ç›‘æ§ä¸­ Â· æ¯ {_intervalSeconds / 60} åˆ†é’Ÿ";
+    public IBrush StateBrush => _snapshot.State switch
+    {
+        ServerState.Online => OnlineBrush,
+        ServerState.Offline => OfflineBrush,
+        _ => PendingBrush
+    };
+    public IBrush StateSoftBrush => _snapshot.State switch
+    {
+        ServerState.Online => OnlineSoftBrush,
+        ServerState.Offline => OfflineSoftBrush,
+        _ => PendingSoftBrush
+    };
+
+    public void UpdateStatus(ServerStatusSnapshot snapshot)
+    {
+        _snapshot = snapshot;
+        RaiseAll();
+    }
+
+    public void SetChecking(bool value)
+    {
+        _isChecking = value;
+        Raise(nameof(StatusLabel), nameof(StatusDetail), nameof(RefreshText));
+    }
+
+    public void SetInterval(int seconds)
+    {
+        _intervalSeconds = seconds;
+        Raise(nameof(MonitoringText));
+    }
+
+    private void RaiseAll() => Raise(
+        nameof(StatusLabel), nameof(StatusDetail), nameof(Address), nameof(Players), nameof(Latency),
+        nameof(Motd), nameof(RefreshText), nameof(MonitoringText), nameof(StateBrush), nameof(StateSoftBrush));
+
+    private void Raise(params string[] properties)
+    {
+        foreach (var property in properties)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+    }
+
+    private void OnPropertyChanged([CallerMemberName] string? property = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+}
